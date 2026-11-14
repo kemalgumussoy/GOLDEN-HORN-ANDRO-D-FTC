@@ -13,19 +13,24 @@ workflows:
 
       - name: Skip Projesi Oluştur ve Swift Dosyalarını Aktar
         script: |
-          skip init --appid=com.goldenhorn.biobuzz BioBuzzAndroid BioBuzz
-          rm -rf BioBuzzAndroid/Sources/BioBuzz/*
+          set -e
+          # SwiftUI kodunu doğrudan Kotlin/Compose'a çeviren transpiled-app modu
+          skip init --transpiled-app --appid=com.goldenhorn.biobuzz BioBuzzAndroid BioBuzz
           
-          # Depodaki tüm .swift dosyalarını otomatik bulup yeni projeye kopyalar
-          find . -maxdepth 3 -name "*.swift" ! -path "./BioBuzzAndroid/*" -exec cp {} BioBuzzAndroid/Sources/BioBuzz/ \;
+          # Oluşan örnek kaynak dosyaları temizle ve kendi Swift dosyalarını kopyala
+          rm -rf BioBuzzAndroid/Sources/BioBuzz/*
+          find . -maxdepth 4 -name "*.swift" ! -path "./BioBuzzAndroid/*" -exec cp {} BioBuzzAndroid/Sources/BioBuzz/ \;
 
       - name: Android APK Derlemesi
         script: |
+          set -e
           cd BioBuzzAndroid/Android
+          chmod +x gradlew
           ./gradlew assembleDebug
 
       - name: Oluşan Projeyi GOLDEN-HORN-ANDRO-D-FTC Reposuna Gönder
         script: |
+          set -e
           cd BioBuzzAndroid
           git init
           git config user.name "Codemagic Bot"
