@@ -1,0 +1,26 @@
+workflows:
+  android-debug:
+    name: Android Debug APK
+    max_build_duration: 60
+    instance_type: mac_mini_m2
+
+    environment:
+      java: 17
+
+    scripts:
+      - name: gradlew çalıştırılabilir yap
+        script: |
+          chmod +x ./gradlew
+
+      - name: Debug APK üret
+        script: |
+          ./gradlew :app:assembleDebug --no-daemon --stacktrace
+
+    artifacts:
+      - app/build/outputs/apk/debug/*.apk
+
+    # İstersen e-posta bildirimi için (opsiyonel):
+    # publishing:
+    #   email:
+    #     recipients:
+    #       - kemalgumussoy@ielev.k12.tr
