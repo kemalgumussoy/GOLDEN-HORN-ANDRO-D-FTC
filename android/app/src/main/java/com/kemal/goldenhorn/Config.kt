@@ -13,8 +13,8 @@ object Config {
 
     // FTC Events API — ftc-events.firstinspires.org/services/API/register'dan al
     // (WhatsApp botunda kullandığın değerlerin aynısı)
-    const val FTC_USERNAME = "FTC_KULLANICI_ADIN"   // <-- DOLDUR
-    const val FTC_TOKEN    = "FTC_TOKEN"             // <-- DOLDUR
+    const val FTC_USERNAME = "kemalgmsoy"   // <-- DOLDUR
+    const val FTC_TOKEN    = "99F4B76A-8192-4BD5-B9ED-7330E2C9F24C"             // <-- DOLDUR
     const val FTC_SEASON   = 2026
 
     const val DEFAULT_TEAM_NUMBER = 25039
