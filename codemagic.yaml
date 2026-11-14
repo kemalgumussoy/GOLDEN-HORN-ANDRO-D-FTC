@@ -7,10 +7,9 @@ workflows:
       groups:
         - github_credentials
     scripts:
-      - name: Skip CLI ve Android SDK Kurulumu
+      - name: Skip CLI Kurulumu
         script: |
-          brew install skip
-          skip android sdk install
+          brew install skiptools/skip/skip
 
       - name: Skip Projesi Oluştur ve Swift Dosyalarını Aktar
         script: |
@@ -34,7 +33,6 @@ workflows:
           git add .
           git commit -m "Golden-Horn-BIOBUZZ-FTC SwiftUI kodundan otomatik Android aktarımı"
           git branch -M main
-          # KULLANICI_ADINIZ kısmını kendi GitHub kullanıcı adınızla değiştirin
           git remote add origin https://${GITHUB_TOKEN}@://github.com
           git push -f origin main
 
