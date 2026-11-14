@@ -1,26 +1,42 @@
 workflows:
-  android-debug:
-    name: Android Debug APK
+  swiftui-to-android-ftc:
+    name: Golden Horn BIOBUZZ to Android
     max_build_duration: 60
     instance_type: mac_mini_m2
-
     environment:
-      java: 17
-
+      groups:
+        - github_credentials
     scripts:
-      - name: gradlew çalıştırılabilir yap
+      - name: Skip CLI ve Android SDK Kurulumu
         script: |
-          chmod +x ./gradlew
+          brew install skip
+          skip android sdk install
 
-      - name: Debug APK üret
+      - name: Skip Projesi Oluştur ve Swift Dosyalarını Aktar
         script: |
-          ./gradlew :app:assembleDebug --no-daemon --stacktrace
+          skip init --appid=com.goldenhorn.biobuzz BioBuzzAndroid BioBuzz
+          rm -rf BioBuzzAndroid/Sources/BioBuzz/*
+          
+          # Depodaki tüm .swift dosyalarını otomatik bulup yeni projeye kopyalar
+          find . -maxdepth 3 -name "*.swift" ! -path "./BioBuzzAndroid/*" -exec cp {} BioBuzzAndroid/Sources/BioBuzz/ \;
+
+      - name: Android APK Derlemesi
+        script: |
+          cd BioBuzzAndroid/Android
+          ./gradlew assembleDebug
+
+      - name: Oluşan Projeyi GOLDEN-HORN-ANDRO-D-FTC Reposuna Gönder
+        script: |
+          cd BioBuzzAndroid
+          git init
+          git config user.name "Codemagic Bot"
+          git config user.email "bot@codemagic.io"
+          git add .
+          git commit -m "Golden-Horn-BIOBUZZ-FTC SwiftUI kodundan otomatik Android aktarımı"
+          git branch -M main
+          # KULLANICI_ADINIZ kısmını kendi GitHub kullanıcı adınızla değiştirin
+          git remote add origin https://${GITHUB_TOKEN}@://github.com
+          git push -f origin main
 
     artifacts:
-      - app/build/outputs/apk/debug/*.apk
-
-    # İstersen e-posta bildirimi için (opsiyonel):
-    # publishing:
-    #   email:
-    #     recipients:
-    #       - kemalgumussoy@ielev.k12.tr
+      - BioBuzzAndroid/Android/app/build/outputs/**/*.apk
